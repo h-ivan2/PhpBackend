@@ -2,11 +2,15 @@
 session_start();
 include 'connection.php';
 
-if (!isset($_SESSION['user'])) { header("Location: login.php"); exit; }
+// Must be logged in
+if (!isset($_SESSION['user'])) {
+    header("Location: login.php");
+    exit;
+}
 
-
-if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
-    header("Location: userdashboard.php");
+// Admins go to the admin dashboard
+if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1) {
+    header("Location: Dashboard.php");
     exit;
 }
 
@@ -28,10 +32,9 @@ $females  = count(array_filter($students, fn($s) => strtolower($s['gender']) ===
 <div class="layout">
 
     <aside class="sidebar">
-        <div class="logo">Admin<span>Panel</span></div>
+        <div class="logo">User<span>Panel</span></div>
         <nav>
-            <a href="Dashboard.php" class="active">Dashboard</a>
-            <a href="./signup.php">Add User</a>
+            <a href="user_dashboard.php" class="active">Dashboard</a>
         </nav>
         <div class="logout"><a href="./logout.php">Logout</a></div>
     </aside>
@@ -39,7 +42,10 @@ $females  = count(array_filter($students, fn($s) => strtolower($s['gender']) ===
     <div class="main">
         <div class="topbar">
             <h1>Users</h1>
-            <span class="user"><?= htmlspecialchars($_SESSION['user_name'] ?? $_SESSION['user']) ?></span>
+            <div style="display:flex;align-items:center;gap:10px;">
+                <span class="badge" style="background:rgba(245,158,11,0.15);color:#fbbf24;font-size:11px;padding:3px 10px;border-radius:20px;">Read-only</span>
+                <span class="user"><?= htmlspecialchars($_SESSION['user_name'] ?? $_SESSION['user']) ?></span>
+            </div>
         </div>
 
         <div class="content">
@@ -62,7 +68,7 @@ $females  = count(array_filter($students, fn($s) => strtolower($s['gender']) ===
             <div class="card">
                 <div class="card-head">
                     <h2>All Users (<?= $total ?>)</h2>
-                    <a href="./signup.php" class="btn btn-blue btn-sm">+ Add User</a>
+                    <span style="font-size:12px;color:#64748b;">View only — contact an admin to make changes</span>
                 </div>
 
                 <div class="table-wrap">
@@ -74,7 +80,6 @@ $females  = count(array_filter($students, fn($s) => strtolower($s['gender']) ===
                                 <th>Last Name</th>
                                 <th>Email</th>
                                 <th>Gender</th>
-                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -88,13 +93,6 @@ $females  = count(array_filter($students, fn($s) => strtolower($s['gender']) ===
                                     <span class="badge badge-<?= strtolower($row['gender']) ?>">
                                         <?= ucfirst(htmlspecialchars($row['gender'])) ?>
                                     </span>
-                                </td>
-                                <td>
-                                    <div class="actions">
-                                        <a href="edit.php?id=<?= $row['id'] ?>" class="btn btn-blue btn-sm">Edit</a>
-                                        <a href="delete.php?id=<?= $row['id'] ?>" class="btn btn-red btn-sm"
-                                           onclick="return confirm('Delete <?= htmlspecialchars(addslashes($row['fname'])) ?>?')">Delete</a>
-                                    </div>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
