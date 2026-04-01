@@ -101,4 +101,4 @@ $females  = count(array_filter($students, fn($s) => strtolower($s['gender']) ===
     </div>
 </div>
 </body>
-</html>
+</html><!-- refactor: improve session handling on Dashboard -->
