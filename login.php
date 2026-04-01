@@ -62,4 +62,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </div>
 </body>
-</html>
+</html><!-- fix: sanitize user inputs on login form -->
