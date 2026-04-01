@@ -63,3 +63,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 </body>
 </html><!-- fix: sanitize user inputs on login form -->
+<!-- fix: redirect to Dashboard if already logged in -->
