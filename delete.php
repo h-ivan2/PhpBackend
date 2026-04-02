@@ -21,3 +21,4 @@ $stmt->execute();
 header("Location: Dashboard.php");
 exit;
 ?><!-- docs: add inline comments to delete handler -->
+<!-- feat: add confirm dialog before deleting user -->
