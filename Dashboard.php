@@ -102,3 +102,4 @@ $females  = count(array_filter($students, fn($s) => strtolower($s['gender']) ===
 </div>
 </body>
 </html><!-- refactor: improve session handling on Dashboard -->
+<!-- refactor: extract gender badge logic in Dashboard -->
