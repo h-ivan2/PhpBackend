@@ -328,4 +328,4 @@ tr:hover td { background: #1e2334; }
     .card-head { flex-wrap: wrap; gap: 10px; }
 
     .auth-box { padding: 24px 20px; }
-}
+}<!-- style: improve mobile responsiveness in style.css -->
