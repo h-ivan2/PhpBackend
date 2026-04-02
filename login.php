@@ -64,3 +64,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </body>
 </html><!-- fix: sanitize user inputs on login form -->
 <!-- fix: redirect to Dashboard if already logged in -->
+<!-- fix: redirect non-admin users back to login -->
