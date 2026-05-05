@@ -4,6 +4,12 @@ include 'connection.php';
 
 if (!isset($_SESSION['user'])) { header("Location: login.php"); exit; }
 
+
+if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
+    header("Location: userdashboard.php");
+    exit;
+}
+
 $result   = $conn->query("SELECT * FROM students ORDER BY id ASC");
 $students = $result->fetch_all(MYSQLI_ASSOC);
 $total    = count($students);
@@ -101,5 +107,4 @@ $females  = count(array_filter($students, fn($s) => strtolower($s['gender']) ===
     </div>
 </div>
 </body>
-</html><!-- refactor: improve session handling on Dashboard -->
-<!-- refactor: extract gender badge logic in Dashboard -->
+</html>

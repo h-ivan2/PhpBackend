@@ -21,4 +21,4 @@ $stmt->execute();
 header("Location: Dashboard.php");
 exit;
 ?>
-<!-- feat: add confirm dialog before deleting user -->
+
