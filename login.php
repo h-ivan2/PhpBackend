@@ -2,7 +2,11 @@
 session_start();
 include 'connection.php';
 
-if (isset($_SESSION['user'])) { header("Location: Dashboard.php"); exit; }
+if (isset($_SESSION['user'])) {
+    // Already logged in — send to the right place
+    header("Location: " . ($_SESSION['is_admin'] ? "Dashboard.php" : "userdashboard.php"));
+    exit;
+}
 
 $error = "";
 
@@ -16,14 +20,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user = $stmt->get_result()->fetch_assoc();
 
     if ($user && password_verify($password, $user['password'])) {
-        if ($user['is_admin'] != 1) {
-            $error = "Access denied. Admins only.";
-        } else {
-            $_SESSION['user']      = $user['email'];
-            $_SESSION['user_name'] = $user['fname'] . ' ' . $user['lname'];
+        $_SESSION['user']      = $user['email'];
+        $_SESSION['user_name'] = $user['fname'] . ' ' . $user['lname'];
+        $_SESSION['is_admin']  = (int)$user['is_admin'];
+
+        if ($user['is_admin'] == 1) {
             header("Location: Dashboard.php");
-            exit;
+        } else {
+            header("Location: userdashboard.php");
         }
+        exit;
     } else {
         $error = "Invalid email or password.";
     }
@@ -34,14 +40,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login</title>
+    <title>Login</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="auth-wrap">
     <div class="auth-box">
-        <h2>Admin Login</h2>
-        <p>Only admins can access this panel</p>
+        <h2>Welcome back</h2>
+        <p>Sign in to your account</p>
 
         <?php if ($error): ?>
         <div class="alert alert-err"><?= htmlspecialchars($error) ?></div>
@@ -50,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <form method="POST">
             <div class="field">
                 <label>Email</label>
-                <input type="email" name="email" placeholder="admin@example.com"
+                <input type="email" name="email" placeholder="you@example.com"
                     value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" required>
             </div>
             <div class="field">
@@ -62,6 +68,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </div>
 </body>
-</html><!-- fix: sanitize user inputs on login form -->
-<!-- fix: redirect to Dashboard if already logged in -->
-<!-- fix: redirect non-admin users back to login -->
+</html>
